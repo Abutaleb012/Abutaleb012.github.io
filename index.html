@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,6 +7,8 @@
 <meta name="description" content="Ali Abutaleb, PhD. Remote sensing scientist and GIS consultant in Jazan, Saudi Arabia: oil spill detection with hyperspectral imagery, humanitarian GEOINT, marine baselines, and live web maps.">
 <meta name="author" content="Ali Abutaleb, PhD">
 <link rel="canonical" href="https://abutaleb012.github.io/">
+<link rel="alternate" hreflang="en" href="https://abutaleb012.github.io/">
+<link rel="alternate" hreflang="ar" href="https://abutaleb012.github.io/ar/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ali Abutaleb, PhD | Remote Sensing and GIS">
 <meta property="og:description" content="Ali Abutaleb, PhD. Remote sensing scientist and GIS consultant in Jazan, Saudi Arabia: oil spill detection with hyperspectral imagery, humanitarian GEOINT, marine baselines, and live web maps.">
@@ -16,7 +18,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231A4ED6'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400&display=swap">
 <style>
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0}
@@ -70,7 +72,7 @@ p{margin:0}
 .nav nav{display:flex;gap:1.3rem}
 .nav nav a{color:var(--ink-2);text-decoration:none;font-size:.92rem;font-weight:500}
 .nav nav a:hover{color:var(--blue)}
-@media (max-width:760px){.nav nav{display:none}}
+@media (max-width:760px){.nav nav a:not(.lang){display:none}}
 
 /* hero */
 .hero .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:clamp(2rem,5vw,4.5rem);align-items:center;padding-block:clamp(2.5rem,6vw,5rem) clamp(2rem,5vw,3.5rem)}
@@ -114,7 +116,6 @@ section.sec>.wrap{padding-block:clamp(3.2rem,7vw,5.5rem)}
 .sec-head h2{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:780;font-stretch:112%;letter-spacing:-.015em;margin-top:.5rem}
 .sec-head .read{max-width:46ch;font-size:1.04rem}
 .band{background:var(--band)}
-#research{border-top:1px solid var(--rule)}
 
 /* case studies */
 .case{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(1.5rem,4vw,3.5rem);align-items:center;padding-block:clamp(1.5rem,3vw,2.5rem)}
@@ -212,6 +213,20 @@ section.sec>.wrap{padding-block:clamp(3.2rem,7vw,5.5rem)}
 .repo b{font-family:var(--f-mono);font-weight:500;font-size:.9rem;color:var(--blue)}
 .repo span{font-size:.84rem;color:var(--ink-3)}
 .figs{display:flex;flex-direction:column;gap:1rem}
+.repolinks{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;font-size:.9rem}
+.repolinks span{color:var(--ink-3);margin-right:.2rem}
+.repolinks a{font-family:var(--f-mono);font-size:.8rem;padding:.3rem .65rem;border:1px solid var(--rule);border-radius:6px;text-decoration:none;background:var(--bg);transition:border-color .2s}
+.repolinks a:hover{border-color:var(--blue)}
+.pubs{list-style:none;margin:0;padding:0;border-top:1.5px solid var(--ink)}
+.pubs li{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:1.2rem;align-items:baseline;padding:1.1rem .2rem;border-bottom:1px solid var(--rule)}
+.pubs .y{font-family:var(--f-mono);font-size:.85rem;color:var(--ink-3)}
+.pubs b{display:block;font-family:var(--f-read);font-weight:600;font-size:1.12rem;line-height:1.35}
+.pubs span{display:block;font-size:.9rem;color:var(--ink-3);margin-top:.25rem}
+.st{font-style:normal;font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--rule);color:var(--ink-2);white-space:nowrap}
+.st.done{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+@media (max-width:640px){.pubs li{grid-template-columns:minmax(0,1fr);gap:.35rem}}
+.nav nav a.lang{font-family:"IBM Plex Sans Arabic",var(--f-disp);font-weight:600;color:var(--blue)}
+#cv{border-top:1px solid var(--rule)}
 
 /* quotes */
 .quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1rem,3vw,2rem)}
@@ -293,7 +308,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#top"><img src="img/ali.webp" alt="" width="30" height="30">Ali Abutaleb</a>
-    <nav aria-label="Sections"><a href="#work">Work</a><a href="#live">Live maps</a><a href="#research">Research</a><a href="#index">All projects</a><a href="#contact">Contact</a></nav>
+    <nav aria-label="Sections"><a href="#work">Work</a><a href="#live">Live maps</a><a href="#index">All projects</a><a href="#writing">Writing</a><a href="#contact">Contact</a><a href="ar/" lang="ar" class="lang">العربية</a></nav>
   </div>
 </header>
 
@@ -307,6 +322,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
         <div class="now"><b>Now</b><p>GIS lead on the JCPDI marine environmental study for the Royal Commission, and GIS systems consultant to the Ministry of Hajj and Umrah.</p></div>
         <div class="cta">
           <a class="btn" href="#work">See my work</a>
+          <a class="btn line" href="Ali_Abutaleb_PhD_Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v8m0 0l-3-3m3 3l3-3M3 13h10"/></svg>Resume (PDF)</a>
           <a class="btn line" href="https://www.linkedin.com/in/ali-abutalebphdaremotesensing/" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zm4.94 12.24V6.17H2.54v7.22h2.4zM3.74 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.17-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a>
           <a class="btn line" href="https://github.com/Abutaleb012" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
         </div>
@@ -335,11 +351,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
       <article class="case">
         <div class="media rv">
           <div class="oil">
-            <figure><div class="frame dk"><img src="img/oil_gt.webp" alt="Ground truth: labeled oil spill pixels shown in white on black" width="450" height="438" loading="lazy"></div><figcaption>Ground truth</figcaption></figure>
-            <figure><div class="frame dk"><img src="img/oil_lin.webp" alt="Linear OSP detection result: mostly speckled noise with part of the slick" width="450" height="438" loading="lazy"></div><figcaption>Linear OSP<br><b>F1 0.35</b></figcaption></figure>
+            <figure><div class="frame dk"><img src="img/oil_gt.webp" alt="Ground truth: labeled oil spill pixels shown in amber on dark blue" width="450" height="438" loading="lazy"></div><figcaption>Ground truth</figcaption></figure>
+            <figure><div class="frame dk"><img src="img/oil_lin.webp" alt="Linear OSP result: scattered noise with only part of the slick" width="450" height="438" loading="lazy"></div><figcaption>Linear OSP<br><b>F1 0.35</b></figcaption></figure>
             <figure><div class="frame dk"><img src="img/oil_kern.webp" alt="Kernel OSP with MNF detection result: the slick recovered cleanly with little noise" width="450" height="438" loading="lazy"></div><figcaption>Kernel OSP + MNF<br><b>F1 0.76</b></figcaption></figure>
           </div>
-          <p class="figcap">Oil-spill scene, 436 × 449 pixels. Output from my KOSP notebook: the same detector, linear versus kernel with MNF.</p>
+          <p class="figcap">Oil-spill scene, 436 × 449 pixels, oil shown in amber. Output from my KOSP notebook: the same detector, linear versus kernel with MNF.</p>
         </div>
         <div class="txt rv">
           <span class="kicker">PhD research · George Mason University · 2015 to 2023</span>
@@ -350,8 +366,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
             <div><b class="num" data-to="84" data-suf="%">84%</b><span>of oil pixels found, up from 28%</span></div>
             <div><b class="num" data-to="4">4</b><span>kernel detectors, all open on GitHub</span></div>
           </div>
-          <div class="chips"><span>KSMF</span><span>KASD</span><span>KMSD</span><span>KOSP</span><span>Minimum Noise Fraction</span><span>Python</span></div>
-          <p class="meta">Dissertation: <em>Integrating Nonlinear Kernel-Based Detector Algorithms and Minimum Noise Fraction for Advanced Oil-Spill Detection with Hyperspectral Imagery</em>, 2023. <a href="#research">Code and details</a></p>
+          <div class="repolinks"><span>Code:</span><a href="https://github.com/Abutaleb012/KSMF" target="_blank" rel="noopener">KSMF</a><a href="https://github.com/Abutaleb012/KASD" target="_blank" rel="noopener">KASD</a><a href="https://github.com/Abutaleb012/KMSD" target="_blank" rel="noopener">KMSD</a><a href="https://github.com/Abutaleb012/KOSP" target="_blank" rel="noopener">KOSP</a></div>
+          <p class="read" style="font-size:1rem">Along the way I worked on two USGS hyperspectral mapping projects in Colorado and Alaska, and helped teach a graduate machine learning course on image processing.</p>
+          <p class="meta">Dissertation: <em>Integrating Nonlinear Kernel-Based Detector Algorithms and Minimum Noise Fraction for Advanced Oil-Spill Detection with Hyperspectral Imagery</em>, 2023.</p>
         </div>
       </article>
 
@@ -413,8 +430,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
         <div class="txt rv">
           <span class="kicker">Marine environment · 2025 to now</span>
           <h3>A marine baseline for an industrial coast</h3>
-          <p class="read">For Jazan City for Primary and Downstream Industries, I lead the GIS side of a Red Sea marine baseline. We designed the sampling grid, classified benthic habitats, and interpolated water and sediment quality so the Royal Commission can track change from a known starting point.</p>
-          <div class="chips"><span>QGIS</span><span>Field survey design</span><span>Spatial interpolation</span></div>
+          <p class="read">For Jazan City for Primary and Downstream Industries, I lead the GIS side of a Red Sea marine baseline. I designed the project geodatabase for more than 300 sampling stations, brought satellite, drone, and field instrument data into it, and produced the interpolation surfaces, habitat classification, and marine environmental atlas submitted to the Royal Commission.</p>
+          <p class="read">I also map water quality from Sentinel-2 in Google Earth Engine, and wrote the JCPDI standards chapter on digital enablement and smart sustainability.</p>
+          <div class="chips"><span>QGIS</span><span>Sentinel-2</span><span>Google Earth Engine</span><span>Spatial interpolation</span><span>Habitat classification</span></div>
           <p class="meta">Client: Royal Commission for Jubail and Yanbu, through FUEL Professional Consulting.</p>
         </div>
       </article>
@@ -430,10 +448,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
         </div>
         <div class="txt rv">
           <span class="kicker">Enterprise GIS · 2025 to now</span>
-          <h3>Bringing order to a national GIS platform</h3>
-          <p class="read">At the Ministry of Hajj and Umrah, through Euroconsult, I audited the ArcGIS Online organization. 83% of the content failed the metadata standard. I wrote Python scripts to back up every layer and fix the metadata automatically, then traced where the credits were going.</p>
-          <p class="read">I also produced the Hajj season comparison for 1446 and 1447 as Arabic reports, workbooks, and visual summaries.</p>
-          <div class="chips"><span>ArcGIS Online</span><span>ArcGIS API for Python</span><span>Arabic reporting</span></div>
+          <h3>The GIS platform behind Hajj operations</h3>
+          <p class="read">At the Ministry of Hajj and Umrah, through Euroconsult, I manage GIS data for infrastructure across Makkah, Mina, and Arafat: service points, crowd routing, emergency zones, and readiness layers for more than 2 million pilgrims. I audited the ArcGIS Online organization and found 83% of the layers failed the metadata standard, then wrote Python scripts that back up every layer and fixed the metadata automatically.</p>
+          <p class="read">I also built the PostGIS and ArcSDE geodatabase for infrastructure assets, deployed Field Maps, Survey123, and Dashboards for field teams, and delivered the 1446 versus 1447 season comparison to senior leadership in Arabic.</p>
+          <div class="chips"><span>ArcGIS Online</span><span>ArcGIS API for Python</span><span>PostGIS · ArcSDE</span><span>Field Maps · Survey123</span><span>GEOSA standards</span></div>
         </div>
       </article>
     </div>
@@ -485,32 +503,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
   </section>
 
 
-  <section class="sec" id="research">
-    <div class="wrap">
-      <div class="sec-head rv">
-        <div><span class="kicker">Research</span><h2>From oil spills to desert dust</h2></div>
-      </div>
-      <div class="research">
-        <div class="txt rv">
-          <p class="read">My PhD at George Mason University was about oil spill detection: how to separate oil from water in hyperspectral images when the difference is subtle and nonlinear. I combined <span class="hl">kernel-based detectors with Minimum Noise Fraction</span> to make that separation sharper. Along the way I worked on two USGS hyperspectral mapping projects in Colorado and Alaska, and helped teach a graduate machine learning course on image processing.</p>
-          <p class="read" style="font-size:1rem">Dissertation: <em>Integrating Nonlinear Kernel-Based Detector Algorithms and Minimum Noise Fraction for Advanced Oil-Spill Detection with Hyperspectral Imagery</em>, 2023.</p>
-          <h3>My oil spill detector code is open</h3>
-          <div class="repos">
-            <a class="repo" href="https://github.com/Abutaleb012/KSMF" target="_blank" rel="noopener"><b>KSMF</b><span>Kernel spectral matched filter</span></a>
-            <a class="repo" href="https://github.com/Abutaleb012/KASD" target="_blank" rel="noopener"><b>KASD</b><span>Kernel adaptive subspace detector</span></a>
-            <a class="repo" href="https://github.com/Abutaleb012/KMSD" target="_blank" rel="noopener"><b>KMSD</b><span>Kernel matched subspace detector</span></a>
-            <a class="repo" href="https://github.com/Abutaleb012/KOSP" target="_blank" rel="noopener"><b>KOSP</b><span>Kernel orthogonal subspace projection, oil spill notebook</span></a>
-          </div>
-        </div>
-        <div class="figs rv">
-          <div class="frame"><img src="img/emit_implants.webp" alt="EMIT scene 039 with 1,500 synthetic mineral targets implanted across clean land pixels" width="1000" height="1000" loading="lazy"></div>
-          <p class="figcap">1,500 synthetic targets implanted into EMIT scene 039, colored by mineral.</p>
-          <div class="frame"><img src="img/emit_roc.webp" alt="ROC curves for SAM, MF, ACE, CEM, and RX detectors at 10% sub-pixel fill" width="1400" height="840" loading="lazy"></div>
-          <p class="figcap">ROC curves for the five detectors at 10% sub-pixel fill.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <section class="sec band" id="words">
     <div class="wrap">
@@ -534,20 +526,38 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
     </div>
   </section>
 
-  <section class="sec band" id="cv">
+  <section class="sec band" id="writing">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div><span class="kicker">Writing</span><h2>Publications, books, and papers in progress</h2></div>
+        <a class="btn" href="Ali_Abutaleb_PhD_Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v8m0 0l-3-3m3 3l3-3M3 13h10"/></svg>Download my resume</a>
+      </div>
+      <ol class="pubs">
+        <li class="rv"><span class="y">2023</span><div><b>Integrating Nonlinear Kernel-Based Detector Algorithms and Minimum Noise Fraction for Advanced Oil-Spill Detection with Hyperspectral Imagery</b><span>PhD dissertation, George Mason University</span></div><em class="st done">Completed</em></li>
+        <li class="rv"><span class="y">2026</span><div><b>Radiative-Transfer-Based Synthetic Hyperspectral Dataset for Target Detection under Desert Atmospheric Conditions</b><span>Manuscript prepared for IEEE Transactions on Geoscience and Remote Sensing</span></div><em class="st">In preparation</em></li>
+        <li class="rv"><span class="y">2026</span><div><b>Blue carbon stocks in Red Sea mangroves at JCPDI</b><span>Manuscript for Marine Pollution Bulletin</span></div><em class="st">In preparation</em></li>
+        <li class="rv"><span class="y">2026</span><div><b>Saudi data centers and water stress</b><span>Conference abstract, IAEE MENA 2026</span></div><em class="st">Abstract</em></li>
+        <li class="rv"><span class="y">2026</span><div><b>BIM in ArcGIS: A Student Cookbook, 2nd edition</b><span>Teaching book on bringing BIM models into ArcGIS Pro</span></div><em class="st done">In classroom use</em></li>
+        <li class="rv"><span class="y">2026</span><div><b>Digital Enablement and Smart Sustainability</b><span>Standards chapter for JCPDI, Royal Commission for Jubail and Yanbu</span></div><em class="st done">Delivered</em></li>
+        <li class="rv"><span class="y">Next</span><div><b>Wadi Ibrahim, Makkah: 40 years of change from space</b><span>Book built on remote sensing and GIS</span></div><em class="st">In progress</em></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="cv">
     <div class="wrap">
       <div class="sec-head rv"><div><span class="kicker">Background</span><h2>Experience and education</h2></div></div>
       <div class="cv">
         <div>
           <ul class="jobs">
             <li><span class="y">2025–now</span><div><b>Senior Environmental Survey Specialist and GIS Lead</b><span>FUEL Professional Consulting, for RCJY / JCPDI · Jazan</span></div></li>
-            <li><span class="y">2025–now</span><div><b>GIS Systems Consultant</b><span>Ministry of Hajj and Umrah, through Euroconsult · Makkah</span></div></li>
+            <li><span class="y">2025–now</span><div><b>GIS Systems Consultant</b><span>Ministry of Hajj and Umrah, through Euroconsult · Makkah</span><p>GIS for Hajj infrastructure across Makkah, Mina, and Arafat.</p></div></li>
             <li><span class="y">2023–2024</span><div><b>Postdoctoral Research Scientist</b><span>Center for Satellite and Earth Science Research, George Mason University</span><p>NOAA and NASA funded research.</p></div></li>
             <li><span class="y">2014–now</span><div><b>Freelance geospatial consultant</b><span>Upwork, remote</span><p>Remote sensing, GIS, image processing, and machine learning for international clients.</p></div></li>
             <li><span class="y">2018</span><div><b>Landslide Hazard Consultant</b><span>City of Los Angeles</span><p>Parcel-level susceptibility maps, LiDAR change detection, and an emergency dashboard.</p></div></li>
             <li><span class="y">2015–2023</span><div><b>Graduate Research Assistant</b><span>George Mason University, with USGS</span><p>PhD research on oil spill detection with nonlinear hyperspectral algorithms, plus two USGS mapping projects.</p></div></li>
             <li><span class="y">2012–2014</span><div><b>Engineering Geologist</b><span>Saudi Geological Survey · Jeddah</span><p>Industrial minerals research and remote sensing for exploration.</p></div></li>
-            <li><span class="y">2006–2012</span><div><b>Project Process Engineer</b><span>Riyadh Cement Company</span><p>A two-line plant with 10,000 tons of daily capacity, from design to commissioning.</p></div></li>
+            <li><span class="y">2006–2012</span><div><b>Project Process Engineer</b><span>Riyadh Cement Company</span><p>A $280M, 5,000 tons-per-day clinker plant built with Sinoma, and the Muzahmiyah expansion. Cut kiln energy use by 20%.</p></div></li>
           </ul>
         </div>
         <div>
@@ -582,6 +592,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
         <p class="read">I work with environmental agencies, mining companies, and development teams on oil spill monitoring, remote sensing, enterprise GIS, and environmental mapping, in Saudi Arabia and remotely. I also run workshops and training.</p>
       </div>
       <div class="chan rv">
+        <div class="ch"><div><small>Resume</small><span class="v">Ali_Abutaleb_PhD_Resume.pdf</span></div><a href="Ali_Abutaleb_PhD_Resume.pdf" target="_blank" rel="noopener">Download</a></div>
         <div class="ch"><div><small>Email</small><span class="v" id="email">aliabutaleb012@gmail.com</span></div><button type="button" id="copy">Copy</button></div>
         <div class="ch"><div><small>LinkedIn</small><span class="v">ali-abutalebphdaremotesensing</span></div><a href="https://www.linkedin.com/in/ali-abutalebphdaremotesensing/" target="_blank" rel="noopener">Open</a></div>
         <div class="ch"><div><small>GitHub</small><span class="v">Abutaleb012</span></div><a href="https://github.com/Abutaleb012" target="_blank" rel="noopener">Open</a></div>
@@ -660,8 +671,9 @@ document.getElementById("copy").addEventListener("click",ev=>{const b=ev.current
 /* horizontal strip: arrows + drag */
 const strip=document.getElementById("strip");
 const step=()=>Math.min(strip.clientWidth*.8,460);
-document.getElementById("prev").onclick=()=>strip.scrollBy({left:-step(),behavior:reduce?"auto":"smooth"});
-document.getElementById("next").onclick=()=>strip.scrollBy({left:step(),behavior:reduce?"auto":"smooth"});
+const dirSign=document.documentElement.dir==="rtl"?-1:1;
+document.getElementById("prev").onclick=()=>strip.scrollBy({left:-step()*dirSign,behavior:reduce?"auto":"smooth"});
+document.getElementById("next").onclick=()=>strip.scrollBy({left:step()*dirSign,behavior:reduce?"auto":"smooth"});
 let dx=null,sl=0;
 strip.addEventListener("pointerdown",e=>{if(e.pointerType!=="mouse")return;dx=e.clientX;sl=strip.scrollLeft;strip.classList.add("drag")});
 addEventListener("pointermove",e=>{if(dx===null)return;strip.scrollLeft=sl-(e.clientX-dx)});
