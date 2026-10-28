@@ -225,6 +225,16 @@ section.sec>.wrap{padding-block:clamp(3.2rem,7vw,5.5rem)}
 .st{font-style:normal;font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--rule);color:var(--ink-2);white-space:nowrap}
 .st.done{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
 @media (max-width:640px){.pubs li{grid-template-columns:minmax(0,1fr);gap:.35rem}}
+.story{align-self:flex-start;margin-top:.2rem}
+.latest{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem}
+@media (max-width:980px){.latest{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.latest{grid-template-columns:minmax(0,1fr)}}
+.latest li{border-top:2px solid var(--ink);padding-top:.8rem;display:flex;flex-direction:column;gap:.4rem}
+.latest time{font-family:var(--f-mono);font-size:.78rem;color:var(--blue)}
+.latest b{display:block;font-weight:650;line-height:1.3}
+.latest span{display:block;font-size:.88rem;color:var(--ink-2);margin-top:.3rem}
+#latest>.wrap{padding-block:clamp(2.2rem,5vw,3.5rem)}
+#work{border-top:1px solid var(--rule)}
 .morelink{margin:-1rem 0 1.8rem;font-size:.92rem;font-weight:600}
 .nav nav a.lang{font-family:"IBM Plex Sans Arabic",var(--f-disp);font-weight:600;color:var(--blue)}
 #cv{border-top:1px solid var(--rule)}
@@ -342,6 +352,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
 
   <div class="ticker" aria-hidden="true"><div class="track" id="ticker"></div></div>
 
+  <section class="sec" id="latest">
+    <div class="wrap">
+      <div class="sec-head rv" style="margin-bottom:1.4rem"><div><span class="kicker">What I'm working on</span><h2>Latest</h2></div></div>
+      <ol class="latest">
+        <li class="rv"><time datetime="2026-10">Oct 2026</time><div><b>Published the full story of my PhD oil spill research</b><span>The decisions, the results, and what surprised me. <a href="oil-spill/">Read it</a></span></div></li>
+        <li class="rv"><time datetime="2026-10">Oct 2026</time><div><b>Documented my kernel detector code</b><span>READMEs with methods and results for KOSP, KMSD, KSMF, and KASD on GitHub.</span></div></li>
+        <li class="rv"><time datetime="2026-07">Jul 2026</time><div><b>Jazan Qudurat performance atlas</b><span>214 schools geocoded from Arabic names and verified one by one. <a href="https://abutaleb012.github.io/jazan-qudurat-performance/" target="_blank" rel="noopener">Open the map</a></span></div></li>
+        <li class="rv"><time datetime="2026-06">Jun 2026</time><div><b>Yemen mine-contamination model and Saudi data center water-stress map</b><span>Two humanitarian and infrastructure analyses, shared on LinkedIn.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
   <section class="sec" id="work">
     <div class="wrap">
       <div class="sec-head rv">
@@ -369,6 +391,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
           </div>
           <div class="repolinks"><span>Code:</span><a href="https://github.com/Abutaleb012/KSMF" target="_blank" rel="noopener">KSMF</a><a href="https://github.com/Abutaleb012/KASD" target="_blank" rel="noopener">KASD</a><a href="https://github.com/Abutaleb012/KMSD" target="_blank" rel="noopener">KMSD</a><a href="https://github.com/Abutaleb012/KOSP" target="_blank" rel="noopener">KOSP</a></div>
           <p class="read" style="font-size:1rem">Along the way I worked on two USGS hyperspectral mapping projects in Colorado and Alaska, and helped teach a graduate machine learning course on image processing.</p>
+          <a class="btn line story" href="oil-spill/">Read the full story: how I found the oil →</a>
           <p class="meta">Dissertation: <em>Integrating Nonlinear Kernel-Based Detector Algorithms and Minimum Noise Fraction for Advanced Oil-Spill Detection with Hyperspectral Imagery</em>, 2023.</p>
         </div>
       </article>

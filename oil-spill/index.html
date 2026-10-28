@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How I found oil spills in hyperspectral imagery | Ali Abutaleb, PhD</title>
+<meta name="description" content="How Ali Abutaleb, PhD found oil spills hidden in hyperspectral imagery: MNF, kernel detectors, and why accuracy misleads for rare targets.">
+<meta name="author" content="Ali Abutaleb, PhD">
+<link rel="canonical" href="https://abutaleb012.github.io/oil-spill/">
+<link rel="alternate" hreflang="en" href="https://abutaleb012.github.io/oil-spill/">
+<link rel="alternate" hreflang="ar" href="https://abutaleb012.github.io/ar/oil-spill/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How I found oil spills in hyperspectral imagery | Ali Abutaleb, PhD">
+<meta property="og:description" content="How Ali Abutaleb, PhD found oil spills hidden in hyperspectral imagery: MNF, kernel detectors, and why accuracy misleads for rare targets.">
+<meta property="og:url" content="https://abutaleb012.github.io/oil-spill/">
+<meta property="og:image" content="https://abutaleb012.github.io/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231A4ED6'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+
+/* Layout: a working atlas. Real maps lead every section; prose in the author's voice;
+   one dark band for the live web maps. */
+:root{
+  --bg:#FFFFFF; --band:#F2F5F4; --ink:#121619; --ink-2:#465058; --ink-3:#737E86; --rule:#DFE4E6;
+  --blue:#1A4ED6; --blue-soft:#E7EDFC; --mark:#FFE16A; --land:#E4E9E7; --land-2:#CDD6D3; --sea:#F7F9FA;
+  --dark:#0D1316; --dark-2:#162024; --dark-ink:#E9EEF0; --dark-ink-2:#9FB0B7; --dark-rule:#26343A;
+  --ok:#1D7A4C;
+  --f-disp:"Archivo","Helvetica Neue",Arial,system-ui,sans-serif;
+  --f-read:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --wrap:1200px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1416; --band:#151C1F; --ink:#E8EDEF; --ink-2:#AAB6BC; --ink-3:#7F8C93; --rule:#253136;
+  --blue:#86A6FF; --blue-soft:#1A2440; --mark:rgba(255,214,77,.34); --land:#1E282C; --land-2:#2C3A40; --sea:#121A1D;
+  --dark:#090D0F; --dark-2:#121A1D; --dark-ink:#E9EEF0; --dark-ink-2:#9FB0B7; --dark-rule:#26343A; --ok:#6FD3A0;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0F1416; --band:#151C1F; --ink:#E8EDEF; --ink-2:#AAB6BC; --ink-3:#7F8C93; --rule:#253136;
+  --blue:#86A6FF; --blue-soft:#1A2440; --mark:rgba(255,214,77,.34); --land:#1E282C; --land-2:#2C3A40; --sea:#121A1D;
+  --dark:#090D0F; --dark-2:#121A1D; --dark-ink:#E9EEF0; --dark-ink-2:#9FB0B7; --dark-rule:#26343A; --ok:#6FD3A0;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-disp);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+img{display:block;max-width:100%;height:auto}
+a{color:var(--blue);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:3px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.04}
+p{margin:0}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.02em}
+.kicker{font-family:var(--f-disp);font-stretch:70%;font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-3)}
+.read{font-family:var(--f-read);font-size:1.12rem;line-height:1.62;color:var(--ink-2)}
+.hl{background-image:linear-gradient(var(--mark),var(--mark));background-repeat:no-repeat;background-size:100% 42%;background-position:0 88%;color:var(--ink);padding:0 .08em}
+.hl.play{animation:marker 1s .25s cubic-bezier(.6,.1,.2,1) both}
+@keyframes marker{from{background-size:0 42%}to{background-size:100% 42%}}
+
+/* progress + nav */
+.progress{position:fixed;left:0;top:env(safe-area-inset-top,0px);height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--blue);z-index:30}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:15;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.7rem}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:700;font-stretch:110%;color:var(--ink);text-decoration:none;white-space:nowrap}
+.brand img{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.nav nav{display:flex;gap:1.3rem}
+.nav nav a{color:var(--ink-2);text-decoration:none;font-size:.92rem;font-weight:500}
+.nav nav a:hover{color:var(--blue)}
+@media (max-width:760px){.nav nav a:not(.lang){display:none}}
+
+/* hero */
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);gap:clamp(2rem,5vw,4.5rem);align-items:center;padding-block:clamp(2.5rem,6vw,5rem) clamp(2rem,5vw,3.5rem)}
+@media (max-width:880px){.hero .wrap{grid-template-columns:minmax(0,1fr)}.portrait{order:-1;justify-self:center}}
+.coord{display:inline-flex;align-items:center;gap:.55rem;color:var(--ink-3)}
+.pin{width:10px;height:10px;border-radius:50%;background:var(--blue);position:relative;flex:none}
+.pin::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--blue);animation:ping 2.2s ease-out infinite}
+@keyframes ping{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.hero h1{font-size:clamp(2.7rem,7vw,5.4rem);font-weight:800;font-stretch:118%;letter-spacing:-.02em;margin-top:1.1rem}
+.hero h1 span{display:block;font-size:.36em;font-weight:500;font-stretch:100%;letter-spacing:0;color:var(--ink-2);margin-top:.7rem}
+.hero .read{margin-top:1.4rem;max-width:56ch}
+.now{margin-top:1.6rem;display:flex;gap:.8rem;align-items:flex-start;max-width:58ch;padding:.85rem 1rem;border:1px solid var(--rule);border-radius:10px;background:var(--band)}
+.now b{font-family:var(--f-mono);font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--ok);padding-top:.15rem;white-space:nowrap}
+.now p{font-size:.95rem;color:var(--ink-2)}
+.cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.72rem 1.15rem;border-radius:999px;font-weight:600;font-size:.95rem;text-decoration:none;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);transition:transform .18s}
+.btn:hover{transform:translateY(-2px)}
+.btn.line{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.line:hover{border-color:var(--ink)}
+.btn svg{width:17px;height:17px;flex:none}
+.portrait{position:relative;width:clamp(230px,30vw,380px);aspect-ratio:1;max-width:100%}
+.portrait .ph{position:absolute;inset:11%;border-radius:50%;overflow:hidden;background:var(--band);animation:bob 7s ease-in-out infinite}
+.portrait .ph img{width:100%;height:100%;object-fit:cover}
+.portrait svg.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 48s linear infinite}
+.portrait svg.ring text{font-family:var(--f-mono);font-size:7.1px;letter-spacing:2.2px;fill:var(--ink-3);text-transform:uppercase}
+.portrait svg.ring circle{fill:none;stroke:var(--rule)}
+.tag{position:absolute;right:2%;bottom:12%;display:flex;align-items:center;gap:.5rem;background:var(--bg);border:1px solid var(--rule);border-radius:999px;padding:.4rem .75rem;font-size:.82rem;font-weight:600;box-shadow:0 6px 20px -10px rgba(0,0,0,.35)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ticker */
+.ticker{border-block:1px solid var(--rule);overflow:hidden;background:var(--band)}
+.ticker .track{display:flex;width:max-content;animation:slide 60s linear infinite}
+.ticker span{font-family:var(--f-disp);font-stretch:75%;font-weight:600;font-size:.95rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-2);padding:.85rem 1.4rem;white-space:nowrap;display:flex;align-items:center;gap:1.4rem}
+.ticker span::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--blue)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* sections */
+section.sec>.wrap{padding-block:clamp(3.2rem,7vw,5.5rem)}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:1.5rem;flex-wrap:wrap;margin-bottom:clamp(1.8rem,4vw,3rem)}
+.sec-head h2{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:780;font-stretch:112%;letter-spacing:-.015em;margin-top:.5rem}
+.sec-head .read{max-width:46ch;font-size:1.04rem}
+.band{background:var(--band)}
+
+/* case studies */
+.case{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(1.5rem,4vw,3.5rem);align-items:center;padding-block:clamp(1.5rem,3vw,2.5rem)}
+.case+.case{border-top:1px solid var(--rule)}
+.case.flip .media{order:2}
+@media (max-width:880px){.case{grid-template-columns:minmax(0,1fr)}.case.flip .media{order:0}}
+.media{position:relative;min-width:0}
+.frame{border-radius:12px;overflow:hidden;border:1px solid var(--rule);background:#fff}
+.frame img{width:100%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.media:hover .frame img{transform:scale(1.03)}
+.inset{position:absolute;width:46%;right:-4%;bottom:-8%;border-radius:10px;overflow:hidden;border:1px solid var(--rule);background:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.4)}
+@media (max-width:880px){.inset{position:static;width:100%;margin-top:.8rem;box-shadow:none}}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.oil{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7rem}
+.oil figure{margin:0}
+.oil figcaption{margin-top:.5rem;font-size:.86rem;color:var(--ink-3);line-height:1.35}
+.oil figcaption b{color:var(--ink);font-variant-numeric:tabular-nums}
+.frame.dk{background:#000}
+.oil .frame img{image-rendering:auto}
+.figcap{font-family:var(--f-mono);font-size:.74rem;color:var(--ink-3);margin-top:.6rem}
+.case .txt{display:flex;flex-direction:column;gap:1rem;min-width:0}
+.case h3{font-size:clamp(1.55rem,2.8vw,2.1rem);font-weight:760;font-stretch:108%}
+.case .meta{font-size:.9rem;color:var(--ink-3)}
+.figures{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;padding-top:.4rem;border-top:1px solid var(--rule);margin-top:.3rem}
+.figures div{padding-top:.8rem}
+.figures b{display:block;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:780;font-stretch:105%;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.05}
+.figures span{font-size:.84rem;color:var(--ink-3);line-height:1.35;display:block;margin-top:.25rem}
+@media (max-width:460px){.figures{grid-template-columns:minmax(0,1fr)}}
+.quote{font-family:var(--f-read);font-style:italic;font-size:1.1rem;color:var(--ink);border-left:3px solid var(--blue);padding-left:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chips span{font-family:var(--f-mono);font-size:.72rem;padding:.22rem .55rem;border-radius:5px;background:var(--band);border:1px solid var(--rule);color:var(--ink-2)}
+.bars{display:flex;flex-direction:column;gap:.9rem;border:1px solid var(--rule);border-radius:12px;padding:clamp(1.2rem,3vw,2rem);background:var(--bg)}
+.bar-row{display:grid;grid-template-columns:7.5rem minmax(0,1fr) 3.5rem;gap:.8rem;align-items:center;font-size:.9rem;color:var(--ink-2)}
+.bar{height:14px;border-radius:7px;background:var(--band);overflow:hidden;border:1px solid var(--rule)}
+.bar i{display:block;height:100%;border-radius:7px;background:var(--c,var(--blue));transform-origin:0 50%}
+.bar-row b{font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.bars.play .bar i{animation:grow 1.4s cubic-bezier(.2,.7,.2,1) both}
+.bars.play .bar-row:nth-child(3) .bar i{animation-delay:.5s}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.mapped{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.75rem}
+.mapped li{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:.8rem;font-size:.92rem}
+.mapped b{font-weight:650}
+.mapped span{color:var(--ink-2)}
+@media (max-width:480px){.mapped li{grid-template-columns:minmax(0,1fr);gap:.1rem}}
+.bars.sea .bignum b{color:var(--blue)}
+.bignum{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:1rem}
+.bignum b{font-size:clamp(3rem,7vw,4.8rem);font-weight:800;font-stretch:115%;line-height:1;font-variant-numeric:tabular-nums}
+.bignum span{color:var(--ink-3);font-size:.95rem;max-width:22ch}
+
+/* live maps (dark band) */
+.dark{background:var(--dark);color:var(--dark-ink)}
+.dark .kicker{color:var(--dark-ink-2)}
+.dark .read{color:var(--dark-ink-2)}
+.dark .sec-head h2{color:var(--dark-ink)}
+.grid-live{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.2rem}
+@media (max-width:980px){.grid-live{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.grid-live{grid-template-columns:minmax(0,1fr)}}
+.live{display:flex;flex-direction:column;background:var(--dark-2);border:1px solid var(--dark-rule);border-radius:12px;overflow:hidden;text-decoration:none;color:inherit;min-width:0;transition:border-color .25s,transform .25s}
+.live:hover{border-color:#4b6470;transform:translateY(-3px)}
+.live .shot{aspect-ratio:16/10;max-width:100%;overflow:hidden;position:relative;background:#0a0f11}
+.live .shot img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:transform 4s cubic-bezier(.2,.7,.2,1)}
+.live:hover .shot img{transform:scale(1.09)}
+.live .shot .open{position:absolute;right:.7rem;bottom:.7rem;font-family:var(--f-mono);font-size:.72rem;background:rgba(9,13,15,.85);color:#E9EEF0;border:1px solid #2f3f46;padding:.3rem .55rem;border-radius:6px;opacity:0;transform:translateY(6px);transition:.25s}
+.live:hover .shot .open,.live:focus-visible .shot .open{opacity:1;transform:none}
+.live .body{padding:1rem 1.1rem 1.2rem;display:flex;flex-direction:column;gap:.4rem}
+.live h3{font-size:1.15rem;font-weight:700;color:var(--dark-ink)}
+.live p{font-size:.92rem;color:var(--dark-ink-2)}
+.live .code{margin-top:.3rem;font-family:var(--f-mono);font-size:.74rem;color:#86A6FF}
+.live-note{margin-top:1.4rem;font-family:var(--f-mono);font-size:.74rem;color:var(--dark-ink-2)}
+
+/* strip */
+.strip-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;flex-wrap:wrap}
+.arrows{display:flex;gap:.5rem}
+.arrows button{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);font-size:1.1rem;cursor:pointer}
+.arrows button:hover{border-color:var(--ink)}
+.strip{display:flex;gap:1.1rem;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:max(16px,calc((100vw - var(--wrap))/2 + 16px));padding:1.6rem max(16px,env(safe-area-inset-right,0px)) 1.2rem max(16px,env(safe-area-inset-left,0px),calc((100vw - var(--wrap))/2 + 16px));scrollbar-width:thin;cursor:grab}
+.strip.drag{cursor:grabbing;scroll-snap-type:none}
+.strip figure{margin:0;flex:none;scroll-snap-align:start;width:min(78vw,420px)}
+.strip figure.wide{width:min(88vw,760px)}
+.strip .frame img{height:min(62vw,440px);width:100%;object-fit:cover;object-position:50% 0}
+.strip .pair .frame img{height:min(40vw,440px)}
+.strip figcaption{margin-top:.7rem;font-size:.92rem;color:var(--ink-2);max-width:52ch}
+.strip figcaption b{color:var(--ink);font-weight:650}
+.strip .lab{position:absolute;left:.6rem;top:.6rem;font-family:var(--f-mono);font-size:.7rem;background:rgba(0,0,0,.72);color:#fff;padding:.25rem .5rem;border-radius:5px}
+.strip .pair .frame{position:relative}
+
+/* research */
+.research{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
+@media (max-width:900px){.research{grid-template-columns:minmax(0,1fr)}}
+.research .txt{display:flex;flex-direction:column;gap:1rem}
+.research .txt h3{font-size:1.3rem;font-weight:720;margin-top:.6rem}
+.repos{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.repo{display:flex;flex-direction:column;gap:.15rem;padding:.75rem .9rem;border:1px solid var(--rule);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--bg);transition:border-color .2s,transform .2s}
+.repo:hover{border-color:var(--blue);transform:translateY(-2px)}
+.repo b{font-family:var(--f-mono);font-weight:500;font-size:.9rem;color:var(--blue)}
+.repo span{font-size:.84rem;color:var(--ink-3)}
+.figs{display:flex;flex-direction:column;gap:1rem}
+.repolinks{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;font-size:.9rem}
+.repolinks span{color:var(--ink-3);margin-right:.2rem}
+.repolinks a{font-family:var(--f-mono);font-size:.8rem;padding:.3rem .65rem;border:1px solid var(--rule);border-radius:6px;text-decoration:none;background:var(--bg);transition:border-color .2s}
+.repolinks a:hover{border-color:var(--blue)}
+.pubs{list-style:none;margin:0;padding:0;border-top:1.5px solid var(--ink)}
+.pubs li{display:grid;grid-template-columns:4.5rem minmax(0,1fr) auto;gap:1.2rem;align-items:baseline;padding:1.1rem .2rem;border-bottom:1px solid var(--rule)}
+.pubs .y{font-family:var(--f-mono);font-size:.85rem;color:var(--ink-3)}
+.pubs b{display:block;font-family:var(--f-read);font-weight:600;font-size:1.12rem;line-height:1.35}
+.pubs span{display:block;font-size:.9rem;color:var(--ink-3);margin-top:.25rem}
+.st{font-style:normal;font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;padding:.25rem .55rem;border-radius:999px;border:1px solid var(--rule);color:var(--ink-2);white-space:nowrap}
+.st.done{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent)}
+@media (max-width:640px){.pubs li{grid-template-columns:minmax(0,1fr);gap:.35rem}}
+.story{align-self:flex-start;margin-top:.2rem}
+.latest{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.1rem}
+@media (max-width:980px){.latest{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.latest{grid-template-columns:minmax(0,1fr)}}
+.latest li{border-top:2px solid var(--ink);padding-top:.8rem;display:flex;flex-direction:column;gap:.4rem}
+.latest time{font-family:var(--f-mono);font-size:.78rem;color:var(--blue)}
+.latest b{display:block;font-weight:650;line-height:1.3}
+.latest span{display:block;font-size:.88rem;color:var(--ink-2);margin-top:.3rem}
+#latest>.wrap{padding-block:clamp(2.2rem,5vw,3.5rem)}
+#work{border-top:1px solid var(--rule)}
+.morelink{margin:-1rem 0 1.8rem;font-size:.92rem;font-weight:600}
+.nav nav a.lang{font-family:"IBM Plex Sans Arabic",var(--f-disp);font-weight:600;color:var(--blue)}
+#cv{border-top:1px solid var(--rule)}
+
+/* quotes */
+.quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1rem,3vw,2rem)}
+@media (max-width:860px){.quotes{grid-template-columns:minmax(0,1fr)}}
+.quotes blockquote{margin:0;display:flex;flex-direction:column;gap:1rem;padding-top:1.1rem;border-top:2px solid var(--ink)}
+.quotes p{font-family:var(--f-read);font-size:clamp(1.25rem,2.2vw,1.55rem);line-height:1.35;color:var(--ink)}
+.quotes cite{font-style:normal;font-size:.86rem;color:var(--ink-3)}
+
+/* index */
+.filters{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.2rem}
+.chip{font-family:var(--f-disp);font-size:.86rem;font-weight:550;padding:.45rem .85rem;border:1.5px solid var(--rule);border-radius:999px;background:var(--bg);color:var(--ink-2);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .n{opacity:.55;margin-left:.25rem}
+.index{border-top:1.5px solid var(--ink)}
+.row{border-bottom:1px solid var(--rule)}
+.row summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.5fr) 7rem 5rem 1.2rem;gap:1rem;align-items:baseline;padding:.95rem .3rem}
+.row summary::-webkit-details-marker{display:none}
+.row summary:hover{background:var(--band)}
+.row .t{font-weight:650;font-size:1.04rem}
+.row .c,.row .p{font-size:.88rem;color:var(--ink-3)}
+.row .p{font-variant-numeric:tabular-nums;text-align:right}
+.row .lv{font-family:var(--f-mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ok);text-align:right}
+.row .tog{color:var(--ink-3);transition:transform .2s}
+.row[open] .tog{transform:rotate(45deg)}
+.row .body{padding:0 .3rem 1.3rem;display:flex;flex-direction:column;gap:.7rem;max-width:78ch}
+.row .body p{color:var(--ink-2);font-size:.96rem}
+.row .body .res{color:var(--ink);font-weight:550}
+.row .links{display:flex;gap:.9rem;flex-wrap:wrap;font-size:.9rem;font-weight:600}
+@media (max-width:760px){
+  .row summary{grid-template-columns:minmax(0,1fr) 1.2rem;gap:.2rem .7rem}
+  .row .t,.row .c,.row .p,.row .lv{grid-column:1;text-align:left}
+  .row .tog{grid-column:2;grid-row:1}
+}
+
+/* cv */
+.cv{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(2rem,5vw,4rem)}
+@media (max-width:880px){.cv{grid-template-columns:minmax(0,1fr)}}
+.cv h3{font-size:1.1rem;font-weight:700;margin-bottom:.7rem}
+.jobs{list-style:none;margin:0;padding:0}
+.jobs li{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:1rem;padding:.9rem 0;border-top:1px solid var(--rule)}
+.jobs .y{font-family:var(--f-mono);font-size:.8rem;color:var(--ink-3);font-variant-numeric:tabular-nums;padding-top:.15rem}
+.jobs b{font-weight:650;display:block}
+.jobs span{font-size:.92rem;color:var(--ink-2)}
+.jobs p{font-size:.88rem;color:var(--ink-3);margin-top:.2rem}
+@media (max-width:520px){.jobs li{grid-template-columns:minmax(0,1fr);gap:.1rem}}
+.list{list-style:none;margin:0 0 1.8rem;padding:0;display:flex;flex-direction:column;gap:.45rem;font-size:.94rem;color:var(--ink-2)}
+.list li span{font-family:var(--f-mono);font-size:.74rem;color:var(--ink-3);margin-left:.35rem}
+.degree{margin-bottom:1.1rem}
+.degree b{display:block;font-weight:650}
+.degree span{font-size:.9rem;color:var(--ink-3)}
+.degree em{display:block;font-family:var(--f-read);font-size:.92rem;color:var(--ink-2);margin-top:.2rem}
+
+/* contact */
+.contact{background:var(--dark);color:var(--dark-ink)}
+.contact .wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(2rem,5vw,4rem);align-items:center;padding-block:clamp(3.5rem,8vw,6rem)}
+@media (max-width:820px){.contact .wrap{grid-template-columns:minmax(0,1fr)}}
+.contact h2{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;font-stretch:115%}
+.contact .read{color:var(--dark-ink-2);margin-top:1rem;max-width:46ch}
+.chan{display:flex;flex-direction:column;gap:.7rem}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;padding:.85rem 1rem;border:1px solid var(--dark-rule);border-radius:10px;background:var(--dark-2)}
+.ch small{display:block;font-family:var(--f-mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dark-ink-2)}
+.ch .v{font-family:var(--f-mono);font-size:.88rem;color:var(--dark-ink);word-break:break-all;user-select:all}
+.ch a,.ch button{font-family:var(--f-mono);font-size:.76rem;color:var(--dark-ink);border:1px solid #33454c;background:transparent;padding:.35rem .7rem;border-radius:6px;cursor:pointer;text-decoration:none}
+.ch a:hover,.ch button:hover{border-color:#86A6FF}
+footer{background:var(--dark);border-top:1px solid var(--dark-rule);color:var(--dark-ink-2)}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding-block:1.2rem;font-family:var(--f-mono);font-size:.74rem}
+
+/* scroll reveal: content is visible at rest; it only animates once it enters view */
+.rv.play{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+/* write-up page */
+.article .wrap{max-width:820px}
+.back{display:inline-flex;gap:.4rem;align-items:center;font-weight:600;text-decoration:none;font-size:.92rem}
+.art-head{padding-block:clamp(2.5rem,6vw,4.5rem) 1.5rem}
+.art-head h1{font-size:clamp(2.2rem,5.5vw,3.6rem);font-weight:800;font-stretch:112%;letter-spacing:-.015em;margin-top:1rem}
+.art-head .dek{margin-top:1.1rem}
+.byline{display:flex;align-items:center;gap:.7rem;margin-top:1.5rem;font-size:.9rem;color:var(--ink-3)}
+.byline img{width:36px;height:36px;border-radius:50%}
+.byline b{color:var(--ink);font-weight:650}
+.lead-fig{max-width:1100px;margin:1.5rem auto 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.article section{padding-block:1.6rem}
+.article h2{font-size:clamp(1.45rem,3vw,1.9rem);font-weight:760;font-stretch:108%;margin-bottom:.9rem;display:flex;gap:.8rem;align-items:baseline}
+.article h2 .n{font-family:var(--f-mono);font-size:.85rem;color:var(--blue);font-weight:500;flex:none}
+.article .read+ .read{margin-top:1rem}
+.callout{margin-top:1.2rem;padding:1rem 1.2rem;border-radius:10px;background:var(--band);border:1px solid var(--rule)}
+.callout b{display:block;font-size:.8rem;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin-bottom:.3rem}
+.callout p{color:var(--ink-2)}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin-top:1.2rem}
+.facts div{background:var(--bg);padding:.9rem 1rem}
+.facts b{display:block;font-size:1.5rem;font-weight:760;font-variant-numeric:tabular-nums}
+.facts span{font-size:.82rem;color:var(--ink-3)}
+@media (max-width:620px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.chart{margin-top:1.3rem;border:1px solid var(--rule);border-radius:12px;padding:1.2rem 1.3rem}
+.chart h3{font-size:1rem;font-weight:700}
+.chart .sub{font-size:.85rem;color:var(--ink-3);margin-top:.2rem}
+.grp{margin-top:1.1rem}
+.grp>b{display:block;font-size:.88rem;font-weight:650;margin-bottom:.45rem}
+.brow{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 2.6rem;gap:.7rem;align-items:center;font-size:.86rem;color:var(--ink-2);margin-top:.35rem}
+.btrack{height:16px;background:var(--band);border-radius:4px;overflow:hidden}
+.btrack i{display:block;height:100%;border-radius:4px;background:var(--ink-3);transform-origin:0 50%}
+.btrack i.k{background:#E8A23A}
+.brow b{font-variant-numeric:tabular-nums;color:var(--ink);text-align:right}
+.chart.play .btrack i{animation:grow 1.2s cubic-bezier(.2,.7,.2,1) both}
+.legend{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.82rem;color:var(--ink-3);margin-top:1rem}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:.35rem}
+@media (max-width:520px){.brow{grid-template-columns:7rem minmax(0,1fr) 2.4rem}}
+.tbl{overflow-x:auto;margin-top:1.2rem;border:1px solid var(--rule);border-radius:10px}
+.tbl table{border-collapse:collapse;width:100%;min-width:560px;font-size:.88rem}
+.tbl th,.tbl td{padding:.55rem .8rem;text-align:left;border-bottom:1px solid var(--rule)}
+.tbl th{font-family:var(--f-mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:500;background:var(--band)}
+.tbl td.num{font-variant-numeric:tabular-nums;text-align:right}
+.tbl th.num{text-align:right}
+.tbl tr.best td{font-weight:700;color:var(--ink)}
+.tbl tr:last-child td{border-bottom:0}
+.code-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin-top:1rem}
+@media (max-width:520px){.code-links{grid-template-columns:minmax(0,1fr)}}
+.code-links a{display:flex;flex-direction:column;gap:.15rem;padding:.8rem .95rem;border:1px solid var(--rule);border-radius:10px;text-decoration:none;color:var(--ink);transition:border-color .2s}
+.code-links a:hover{border-color:var(--blue)}
+.code-links b{font-family:var(--f-mono);font-weight:500;color:var(--blue)}
+.code-links span{font-size:.86rem;color:var(--ink-3)}
+.end{border-top:1px solid var(--rule);margin-top:2rem;padding-block:2rem 3rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="../"><img src="../img/ali.webp" alt="" width="30" height="30">Ali Abutaleb</a>
+    <nav aria-label="Sections"><a href="../#work">Work</a><a href="../#live">Live maps</a><a href="../#writing">Writing</a><a href="../#contact">Contact</a><a href="../ar/oil-spill/" lang="ar" class="lang">العربية</a></nav>
+  </div>
+</header>
+
+<main class="article">
+  <div class="wrap art-head">
+    <a class="back" href="../#work">← Back to portfolio</a>
+    <p class="kicker" style="margin-top:1.6rem">PhD research · George Mason University · 2015 to 2023</p>
+    <h1>How I found oil spills hidden in hyperspectral imagery</h1>
+    <p class="read dek">Thin oil on water looks almost exactly like water. This is the story of the decisions behind my dissertation, what worked, what failed, and why I stopped trusting accuracy as a score.</p>
+    <div class="byline"><img src="../img/ali.webp" alt="" width="36" height="36"><span><b>Ali Abutaleb, PhD</b> · 8 minute read</span></div>
+  </div>
+
+  <div class="lead-fig rv">
+    <div class="oil">
+      <figure><div class="frame dk"><img src="../img/oil_gt.webp" alt="Ground truth: labeled oil spill pixels shown in amber on dark blue" width="672" height="654"></div><figcaption>Ground truth</figcaption></figure>
+      <figure><div class="frame dk"><img src="../img/oil_lin.webp" alt="Linear OSP result: scattered noise with only part of the slick" width="672" height="654"></div><figcaption>Linear OSP<br><b>F1 0.35</b></figcaption></figure>
+      <figure><div class="frame dk"><img src="../img/oil_kern.webp" alt="Kernel OSP with MNF result: the slick recovered cleanly with little noise" width="672" height="654"></div><figcaption>Kernel OSP + MNF<br><b>F1 0.76</b></figcaption></figure>
+    </div>
+    <p class="figcap">The same scene, the same detector family. Left: where the oil really is. Middle: a linear detector. Right: the kernel version with noise reduction. Oil in amber.</p>
+  </div>
+
+  <div class="wrap">
+    <section class="rv">
+      <h2><span class="n">01</span>The problem</h2>
+      <p class="read">A hyperspectral sensor records each pixel in hundreds of narrow bands, so every pixel carries a full reflectance spectrum. In theory that is enough to tell oil from water. In practice a thin sheen changes the spectrum only slightly, the signal sits close to the sensor noise, and the relationship between oil and background is not linear.</p>
+      <p class="read">Classic detectors such as orthogonal subspace projection (OSP) and the matched subspace detector (MSD) assume a linear world. They draw a flat boundary between target and background. When the real boundary curves, they miss oil and flag clean water.</p>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">02</span>The data</h2>
+      <p class="read">My main test scene was a hyperspectral image of an oil spill, cut to a region of interest of 436 × 449 pixels with 187 spectral bands. Every pixel in a ground truth image was labeled oil or not oil, which let me score each detector pixel by pixel.</p>
+      <div class="facts">
+        <div><b>195,764</b><span>pixels in the scene</span></div>
+        <div><b>187</b><span>spectral bands</span></div>
+        <div><b>10,959</b><span>oil pixels</span></div>
+        <div><b>5.6%</b><span>of the scene is oil</span></div>
+      </div>
+      <p class="read" style="margin-top:1rem">That last number shaped everything that followed.</p>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">03</span>Decision one: clean the signal first</h2>
+      <p class="read">Before detecting anything I ran a Minimum Noise Fraction (MNF) transform. MNF reorders the bands by signal-to-noise ratio, so the information that separates oil from water is concentrated and the noise is pushed aside. I kept a raw copy and an MNF copy of the scene and ran every detector on both, so I could measure what MNF was really worth.</p>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">04</span>Decision two: let the kernel bend the boundary</h2>
+      <p class="read">The kernel trick maps each spectrum into a much higher-dimensional space where a flat boundary can separate classes that are tangled in the original space. The detector never computes that space directly. It only needs a kernel function that measures similarity between two spectra.</p>
+      <p class="read">I tested three kernels: <b>Gaussian RBF</b>, <b>polynomial</b>, and <b>spectral angle</b>. I implemented four kernel detectors from the literature: KOSP, KMSD, KSMF, and KASD.</p>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">05</span>Decision three: sample, don't swallow</h2>
+      <p class="read">A kernel detector builds a matrix that compares pixels with each other. For almost 200,000 pixels that matrix would hold tens of billions of entries, far beyond memory. So I used k-means clustering to pick 100 representative background spectra and 100 representative oil spectra, and built the kernel matrices from those. The detector then scores every pixel in the scene against those representatives.</p>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">06</span>Decision four: stop trusting accuracy</h2>
+      <p class="read">Because only 5.6% of the scene is oil, a detector that says "no oil" everywhere is already 94% accurate. Linear OSP scored 0.90 accuracy, which sounds good, yet it found only 28% of the oil. Its F1 score, which balances false alarms against missed oil, was 0.35.</p>
+      <div class="callout"><b>Rule I took away</b><p>For rare targets, report precision, recall, and F1. Accuracy hides failure.</p></div>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">07</span>What happened</h2>
+      <p class="read">The RBF and polynomial kernels more than doubled the F1 score of linear OSP and lifted linear MSD by more than half. MNF helped the linear detectors and those two kernels. The best result came from the kernel matched subspace detector with MNF and a polynomial kernel, at an F1 score of 0.80.</p>
+      <div class="chart" id="f1chart">
+        <h3>F1 score by detector</h3>
+        <p class="sub">Higher is better. Kernel bars show the best kernel for each detector.</p>
+        <div class="grp"><b>Orthogonal subspace projection (OSP)</b>
+          <div class="brow"><span>Linear</span><div class="btrack"><i style="width:35%"></i></div><b>0.35</b></div>
+          <div class="brow"><span>Linear + MNF</span><div class="btrack"><i style="width:40%"></i></div><b>0.40</b></div>
+          <div class="brow"><span>Kernel (RBF)</span><div class="btrack"><i class="k" style="width:74%"></i></div><b>0.74</b></div>
+          <div class="brow"><span>Kernel (RBF) + MNF</span><div class="btrack"><i class="k" style="width:76%"></i></div><b>0.76</b></div>
+        </div>
+        <div class="grp"><b>Matched subspace detector (MSD)</b>
+          <div class="brow"><span>Linear</span><div class="btrack"><i style="width:50%"></i></div><b>0.50</b></div>
+          <div class="brow"><span>Linear + MNF</span><div class="btrack"><i style="width:58%"></i></div><b>0.58</b></div>
+          <div class="brow"><span>Kernel (polynomial)</span><div class="btrack"><i class="k" style="width:77%"></i></div><b>0.77</b></div>
+          <div class="brow"><span>Kernel (poly.) + MNF</span><div class="btrack"><i class="k" style="width:80%"></i></div><b>0.80</b></div>
+        </div>
+        <div class="legend"><span><i style="background:var(--ink-3)"></i>Linear detector</span><span><i style="background:#E8A23A"></i>Kernel detector</span></div>
+      </div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Detector</th><th>Kernel</th><th>MNF</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1</th></tr></thead>
+          <tbody>
+            <tr><td>OSP</td><td>Linear</td><td>No</td><td class="num">0.49</td><td class="num">0.28</td><td class="num">0.35</td></tr>
+            <tr><td>KOSP</td><td>Gaussian RBF</td><td>No</td><td class="num">0.78</td><td class="num">0.72</td><td class="num">0.74</td></tr>
+            <tr><td>KOSP</td><td>Polynomial</td><td>Yes</td><td class="num">0.75</td><td class="num">0.77</td><td class="num">0.76</td></tr>
+            <tr><td>KOSP</td><td>Gaussian RBF</td><td>Yes</td><td class="num">0.69</td><td class="num">0.84</td><td class="num">0.76</td></tr>
+            <tr><td>MSD</td><td>Linear</td><td>No</td><td class="num">0.34</td><td class="num">0.90</td><td class="num">0.50</td></tr>
+            <tr><td>KMSD</td><td>Gaussian RBF</td><td>Yes</td><td class="num">0.81</td><td class="num">0.77</td><td class="num">0.79</td></tr>
+            <tr class="best"><td>KMSD</td><td>Polynomial</td><td>Yes</td><td class="num">0.78</td><td class="num">0.81</td><td class="num">0.80</td></tr>
+            <tr><td>KMSD</td><td>Spectral angle</td><td>Yes</td><td class="num">0.70</td><td class="num">0.15</td><td class="num">0.25</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">08</span>What surprised me</h2>
+      <p class="read">The spectral angle kernel, which sounds like the natural choice for spectra, was the weakest of the three kernels in every detector. With MNF, KMSD with a spectral angle kernel even fell from an F1 score of 0.70 to 0.25. My reading is that MNF reshapes the data in a way that an angle-based similarity does not handle well, while distance-based kernels such as RBF and polynomial benefit from it.</p>
+      <p class="read">The other lesson was about honesty in reporting. The linear matched subspace detector reached 90% recall, a number that looks excellent on its own. Its precision was 0.34, meaning two of every three alarms were false. Reporting one metric alone would have told the wrong story either way.</p>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">09</span>Where it led</h2>
+      <p class="read">The dissertation left me with a question I am still working on: how much of a detector's failure comes from the atmosphere rather than the detector? My current research tests five detectors on NASA EMIT satellite imagery as desert dust and coastal humidity build up. The answer so far: the spectral angle mapper (SAM) breaks down at an aerosol optical depth of 0.75, while MF, ACE, and CEM hold beyond 2.0.</p>
+    </section>
+
+    <section class="rv">
+      <h2><span class="n">10</span>The code</h2>
+      <p class="read">All four detectors are open, with notebooks that run from data loading to ROC curves.</p>
+      <div class="code-links">
+        <a href="https://github.com/Abutaleb012/KOSP" target="_blank" rel="noopener"><b>KOSP</b><span>Kernel orthogonal subspace projection</span></a>
+        <a href="https://github.com/Abutaleb012/KMSD" target="_blank" rel="noopener"><b>KMSD</b><span>Kernel matched subspace detector</span></a>
+        <a href="https://github.com/Abutaleb012/KSMF" target="_blank" rel="noopener"><b>KSMF</b><span>Kernel spectral matched filter</span></a>
+        <a href="https://github.com/Abutaleb012/KASD" target="_blank" rel="noopener"><b>KASD</b><span>Kernel adaptive subspace detector</span></a>
+      </div>
+      <p class="read" style="font-size:.95rem;margin-top:1.2rem">Dissertation: <em>Integrating Nonlinear Kernel-Based Detector Algorithms and Minimum Noise Fraction for Advanced Oil-Spill Detection with Hyperspectral Imagery</em>, George Mason University, 2023. The detectors follow the kernel formulations of Kwon and Nasrabadi (2005 to 2007).</p>
+    </section>
+
+    <div class="end">
+      <a class="btn line" href="../#work">← Back to portfolio</a>
+      <a class="btn" href="../#contact">Work with me</a>
+    </div>
+  </div>
+</main>
+<footer><div class="wrap"><span>Ali Abutaleb, PhD</span><span>Jazan, Saudi Arabia</span></div></footer>
+
+<script>
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prog=document.getElementById("progress");
+const onScroll=()=>{const h=document.documentElement;prog.style.transform=`scaleX(${h.scrollTop/Math.max(1,h.scrollHeight-h.clientHeight)})`};
+addEventListener("scroll",onScroll,{passive:true});onScroll();
+if(!reduce&&"IntersectionObserver" in window){
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(!en.isIntersecting)return;io.unobserve(en.target);en.target.classList.add("play")}),{threshold:.15});
+  requestAnimationFrame(()=>{const vh=innerHeight;document.querySelectorAll(".rv,#f1chart").forEach(el=>{const r=el.getBoundingClientRect();if(r.top<vh*.9&&r.bottom>0)return;io.observe(el)})});
+}
+</script>
+</body>
+</html>
