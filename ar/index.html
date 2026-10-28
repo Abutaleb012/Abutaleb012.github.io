@@ -235,6 +235,10 @@ section.sec>.wrap{padding-block:clamp(3.2rem,7vw,5.5rem)}
 .latest span{display:block;font-size:.88rem;color:var(--ink-2);margin-top:.3rem}
 #latest>.wrap{padding-block:clamp(2.2rem,5vw,3.5rem)}
 #work{border-top:1px solid var(--rule)}
+.dash-tabs{display:flex;gap:.4rem;margin-bottom:.7rem}
+.frame.dash{background:#0f2a2a}
+a.frame.zoom{display:block;cursor:zoom-in}
+.frame.dash img{transition:opacity .35s}
 .morelink{margin:-1rem 0 1.8rem;font-size:.92rem;font-weight:600}
 .nav nav a.lang{font-family:"IBM Plex Sans Arabic",var(--f-disp);font-weight:600;color:var(--blue)}
 #cv{border-top:1px solid var(--rule)}
@@ -421,7 +425,7 @@ h1,h2,h3{line-height:1.3;letter-spacing:0!important}
 
       <article class="case flip">
         <div class="media rv">
-          <div class="frame"><img src="../img/emit_study.webp" alt="منطقة الدراسة: موقع مشهد EMIT على الساحل السعودي للبحر الأحمر وصورة بالألوان الطبيعية" width="1600" height="575" loading="lazy"></div>
+          <div class="frame"><img src="../img/emit_study.webp" alt="منطقة الدراسة: موقع مشهد EMIT على الساحل السعودي للبحر الأحمر وامتداده فوق جازان وعسير" width="1800" height="647" loading="lazy"></div>
           <div class="pair" style="margin-top:.7rem">
             <div class="frame"><img src="../img/emit_targets.webp" alt="أطياف الانعكاس لستة أهداف من USGS بعد إعادة تشكيلها إلى 255 نطاقاً من EMIT" width="1170" height="650" loading="lazy"></div>
             <div class="frame"><img src="../img/emit_pd_aod.webp" alt="احتمال الكشف مقابل العمق البصري للهباء لخمسة كواشف" width="1400" height="583" loading="lazy"></div>
@@ -463,7 +467,9 @@ h1,h2,h3{line-height:1.3;letter-spacing:0!important}
 
       <article class="case flip">
         <div class="media rv">
-          <div class="bars sea">
+          <a class="frame zoom" href="../img/jcpdi_mn.webp" target="_blank" rel="noopener" aria-label="افتح خريطة المنغنيز بالحجم الكامل"><img src="../img/jcpdi_mn.webp" alt="خريطة تركيز المنغنيز في الرواسب البحرية بالمدينة الصناعية في جازان، مستوفاة بطريقة وزن المسافة العكسية من ثماني محطات مسح، وأعلاها في المحطة المرجعية الشمالية" width="1800" height="1225" loading="lazy"></a>
+          <p class="figcap">المنغنيز في الرواسب البحرية، مستوفى من محطات المسح بطريقة IDW. خريطة من الأطلس البيئي البحري للمدينة الصناعية في جازان.</p>
+          <div class="bars sea" style="margin-top:1rem">
             <div class="bignum"><b class="num" data-to="300" data-suf="+">300+</b><span>محطة اعتيان قبالة ساحل المدينة الصناعية في جازان</span></div>
             <ul class="mapped">
               <li><b>الموائل القاعية</b><span>تصنيف الشعاب المرجانية والحشائش البحرية والطحالب من محطات المسح تحت الماء</span></li>
@@ -471,7 +477,6 @@ h1,h2,h3{line-height:1.3;letter-spacing:0!important}
               <li><b>جودة الرواسب</b><span>خطوط كنتورية لحجم الحبيبات والكربون العضوي والهيدروكربونات ومؤشر المعادن</span></li>
               <li><b>الكربون الأزرق</b><span>قياس مخزون الكربون في أشجار المانغروف لورقة علمية</span></li>
             </ul>
-            <p class="figcap" style="margin:0">خرائط العميل غير معروضة هنا.</p>
           </div>
         </div>
         <div class="txt rv">
@@ -486,7 +491,10 @@ h1,h2,h3{line-height:1.3;letter-spacing:0!important}
 
       <article class="case">
         <div class="media rv">
-          <div class="bars" id="bars">
+          <div class="dash-tabs" role="group" aria-label="اختر لوحة المعلومات"><button class="chip" type="button" data-dash="mina" aria-pressed="true">منى</button><button class="chip" type="button" data-dash="arafat" aria-pressed="false">عرفات</button></div>
+          <a class="frame dash zoom" id="dashlink" href="../img/hajj_mina.webp" target="_blank" rel="noopener" aria-label="افتح لوحة المعلومات بالحجم الكامل"><img id="dashimg" src="../img/hajj_mina.webp" data-src-mina="../img/hajj_mina.webp" data-src-arafat="../img/hajj_arafat.webp" data-alt-mina="لوحة مشعر منى التفاعلية لموسم حج 1447 هـ: توزيع المخيمات حسب الشركات على صور الأقمار الصناعية مع أعداد الحجاج ومؤشرات الجاهزية" data-alt-arafat="لوحة مشعر عرفات التفاعلية لموسم حج 1447 هـ: توزيع المخيمات حسب الشركات على صور الأقمار الصناعية مع أعداد الحجاج ومؤشرات الجاهزية" alt="لوحة مشعر منى التفاعلية لموسم حج 1447 هـ: توزيع المخيمات حسب الشركات على صور الأقمار الصناعية مع أعداد الحجاج ومؤشرات الجاهزية" width="1600" height="875" loading="lazy"></a>
+          <p class="figcap">لوحات معلومات تفاعلية للمشاعر المقدسة في موسم 1447 هـ: 1.7 مليون حاج، وتوزيع المخيمات حسب شركات الخدمة، ومؤشرات الجاهزية في لمحة.</p>
+          <div class="bars" id="bars" style="margin-top:1rem">
             <div class="bignum"><b class="num" data-to="166">166</b><span>طبقة بيانات مستضافة تم نسخها احتياطياً على مستوى المنظمة كاملة</span></div>
             <div class="bar-row"><span>قبل التدقيق</span><div class="bar"><i style="width:17%;--c:#C9573E"></i></div><b>17%</b></div>
             <div class="bar-row"><span>بعد برمجياتي</span><div class="bar"><i style="width:100%;--c:var(--ok)"></i></div><b>100%</b></div>
@@ -496,7 +504,7 @@ h1,h2,h3{line-height:1.3;letter-spacing:0!important}
         <div class="txt rv">
           <span class="kicker">نظم المعلومات الجغرافية المؤسسية · 2025 حتى الآن</span>
           <h3>المنصة الجغرافية خلف عمليات الحج</h3>
-          <p class="read">في وزارة الحج والعمرة، عبر يوروكونسلت، أدير البيانات الجغرافية للبنية التحتية في مكة المكرمة ومنى وعرفات: نقاط الخدمة ومسارات الحشود ومناطق الطوارئ وطبقات الجاهزية لأكثر من مليوني حاج. دققتُ منظمة ArcGIS Online فوجدتُ أن 83% من الطبقات لا تلتزم بمعيار البيانات الوصفية، فكتبتُ برمجيات بلغة Python تنسخ كل طبقة احتياطياً وتصحح البيانات الوصفية آلياً.</p>
+          <p class="read">في وزارة الحج والعمرة، عبر يوروكونسلت، أدير البيانات الجغرافية للبنية التحتية في مكة المكرمة ومنى وعرفات: نقاط الخدمة ومسارات الحشود ومناطق الطوارئ وطبقات الجاهزية لنحو 1.7 مليون حاج في موسم 1447 هـ. دققتُ منظمة ArcGIS Online فوجدتُ أن 83% من الطبقات لا تلتزم بمعيار البيانات الوصفية، فكتبتُ برمجيات بلغة Python تنسخ كل طبقة احتياطياً وتصحح البيانات الوصفية آلياً.</p>
           <p class="read">وبنيتُ قاعدة بيانات جغرافية بـ PostGIS و ArcSDE لأصول البنية التحتية، ونشرتُ Field Maps و Survey123 ولوحات المعلومات للفرق الميدانية، وقدمتُ للقيادات مقارنة موسمي 1446 و1447 هـ باللغة العربية.</p>
           <div class="chips"><span>ArcGIS Online</span><span>ArcGIS API for Python</span><span>PostGIS · ArcSDE</span><span>Field Maps · Survey123</span><span>معايير الهيئة العامة للمساحة</span></div>
         </div>
@@ -711,6 +719,13 @@ function renderL(){lEl.innerHTML=P.filter(p=>active==="all"||p.g===active).map(p
 <div class="body"><p>${esc(p.d)}</p><p class="res">${esc(p.r)}</p>${(p.live||p.code)?`<div class="links">${p.live?`<a href="${p.live}" target="_blank" rel="noopener">افتح الخريطة الحية ↗</a>`:""}${p.code?`<a href="${p.code}" target="_blank" rel="noopener">الكود على GitHub ↗</a>`:""}</div>`:""}</div></details>`).join("")}
 fEl.addEventListener("click",e=>{const b=e.target.closest("button[data-g]");if(!b)return;active=b.dataset.g;try{localStorage.setItem("pf-filter2-ar",active)}catch(err){}renderF();renderL()});
 renderF();renderL();
+
+/* dashboard tabs */
+(function(){const img=document.getElementById("dashimg");if(!img)return;
+  document.querySelectorAll("[data-dash]").forEach(b=>b.addEventListener("click",()=>{
+    const k=b.dataset.dash;document.querySelectorAll("[data-dash]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    const go=()=>{img.src=img.getAttribute("data-src-"+k);const a=document.getElementById("dashlink");if(a)a.href=img.getAttribute("data-src-"+k);img.alt=img.getAttribute("data-alt-"+k);img.style.opacity=1};
+    if(reduce){go();return}img.style.opacity=0;setTimeout(go,200)}))})();
 
 /* copy email */
 document.getElementById("copy").addEventListener("click",ev=>{const b=ev.currentTarget,el=document.getElementById("email");

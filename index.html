@@ -235,6 +235,10 @@ section.sec>.wrap{padding-block:clamp(3.2rem,7vw,5.5rem)}
 .latest span{display:block;font-size:.88rem;color:var(--ink-2);margin-top:.3rem}
 #latest>.wrap{padding-block:clamp(2.2rem,5vw,3.5rem)}
 #work{border-top:1px solid var(--rule)}
+.dash-tabs{display:flex;gap:.4rem;margin-bottom:.7rem}
+.frame.dash{background:#0f2a2a}
+a.frame.zoom{display:block;cursor:zoom-in}
+.frame.dash img{transition:opacity .35s}
 .morelink{margin:-1rem 0 1.8rem;font-size:.92rem;font-weight:600}
 .nav nav a.lang{font-family:"IBM Plex Sans Arabic",var(--f-disp);font-weight:600;color:var(--blue)}
 #cv{border-top:1px solid var(--rule)}
@@ -398,7 +402,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
 
       <article class="case flip">
         <div class="media rv">
-          <div class="frame"><img src="img/emit_study.webp" alt="Study area figure: location of the EMIT scene on the Saudi Red Sea coast and a true-color view of the study area" width="1600" height="575" loading="lazy"></div>
+          <div class="frame"><img src="img/emit_study.webp" alt="Study area figure: location of the EMIT scene on the Saudi Red Sea coast and the scene footprint over Jizan and Asir" width="1800" height="647" loading="lazy"></div>
           <div class="pair" style="margin-top:.7rem">
             <div class="frame"><img src="img/emit_targets.webp" alt="Reflectance spectra of six USGS targets resampled to 255 EMIT bands" width="1170" height="650" loading="lazy"></div>
             <div class="frame"><img src="img/emit_pd_aod.webp" alt="Probability of detection versus aerosol optical depth for five detectors" width="1400" height="583" loading="lazy"></div>
@@ -440,7 +444,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
 
       <article class="case flip">
         <div class="media rv">
-          <div class="bars sea">
+          <a class="frame zoom" href="img/jcpdi_mn.webp" target="_blank" rel="noopener" aria-label="Open the full-size manganese map"><img src="img/jcpdi_mn.webp" alt="Map of manganese concentration in marine sediments at JCPDI, interpolated by inverse distance weighting from eight survey stations, highest at the northern reference station" width="1800" height="1225" loading="lazy"></a>
+          <p class="figcap">Manganese in marine sediments, interpolated from survey stations (IDW). One map from the JCPDI marine environmental atlas.</p>
+          <div class="bars sea" style="margin-top:1rem">
             <div class="bignum"><b class="num" data-to="300" data-suf="+">300+</b><span>sampling stations off the JCPDI coast, Jazan</span></div>
             <ul class="mapped">
               <li><b>Benthic habitats</b><span>Coral, seagrass, and seaweed classified from underwater survey stations</span></li>
@@ -448,7 +454,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
               <li><b>Sediment quality</b><span>Grain size, organic carbon, hydrocarbons, and a metals index contoured</span></li>
               <li><b>Blue carbon</b><span>Mangrove carbon stocks measured for a manuscript</span></li>
             </ul>
-            <p class="figcap" style="margin:0">Client maps are not shown here.</p>
           </div>
         </div>
         <div class="txt rv">
@@ -463,7 +468,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
 
       <article class="case">
         <div class="media rv">
-          <div class="bars" id="bars">
+          <div class="dash-tabs" role="group" aria-label="Choose a dashboard"><button class="chip" type="button" data-dash="mina" aria-pressed="true">Mina</button><button class="chip" type="button" data-dash="arafat" aria-pressed="false">Arafat</button></div>
+          <a class="frame dash zoom" id="dashlink" href="img/hajj_mina.webp" target="_blank" rel="noopener" aria-label="Open the full-size dashboard"><img id="dashimg" src="img/hajj_mina.webp" data-src-mina="img/hajj_mina.webp" data-src-arafat="img/hajj_arafat.webp" data-alt-mina="Mina interactive dashboard for the 1447 AH Hajj season: camp allocations by company on satellite imagery, with pilgrim counts and readiness indicators" data-alt-arafat="Arafat interactive dashboard for the 1447 AH Hajj season: camp allocations by company on satellite imagery, with pilgrim counts and readiness indicators" alt="Mina interactive dashboard for the 1447 AH Hajj season: camp allocations by company on satellite imagery, with pilgrim counts and readiness indicators" width="1600" height="875" loading="lazy"></a>
+          <p class="figcap">Interactive dashboards for the holy sites, 1447 AH season: 1.7 million pilgrims, camp allocation by service company, and readiness at a glance.</p>
+          <div class="bars" id="bars" style="margin-top:1rem">
             <div class="bignum"><b class="num" data-to="166">166</b><span>hosted feature layers backed up across the whole organization</span></div>
             <div class="bar-row"><span>Before audit</span><div class="bar"><i style="width:17%;--c:#C9573E"></i></div><b>17%</b></div>
             <div class="bar-row"><span>After my scripts</span><div class="bar"><i style="width:100%;--c:var(--ok)"></i></div><b>100%</b></div>
@@ -473,7 +481,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
         <div class="txt rv">
           <span class="kicker">Enterprise GIS · 2025 to now</span>
           <h3>The GIS platform behind Hajj operations</h3>
-          <p class="read">At the Ministry of Hajj and Umrah, through Euroconsult, I manage GIS data for infrastructure across Makkah, Mina, and Arafat: service points, crowd routing, emergency zones, and readiness layers for more than 2 million pilgrims. I audited the ArcGIS Online organization and found 83% of the layers failed the metadata standard, then wrote Python scripts that back up every layer and fixed the metadata automatically.</p>
+          <p class="read">At the Ministry of Hajj and Umrah, through Euroconsult, I manage GIS data for infrastructure across Makkah, Mina, and Arafat: service points, crowd routing, emergency zones, and readiness layers for about 1.7 million pilgrims in the 1447 season. I audited the ArcGIS Online organization and found 83% of the layers failed the metadata standard, then wrote Python scripts that back up every layer and fixed the metadata automatically.</p>
           <p class="read">I also built the PostGIS and ArcSDE geodatabase for infrastructure assets, deployed Field Maps, Survey123, and Dashboards for field teams, and delivered the 1446 versus 1447 season comparison to senior leadership in Arabic.</p>
           <div class="chips"><span>ArcGIS Online</span><span>ArcGIS API for Python</span><span>PostGIS · ArcSDE</span><span>Field Maps · Survey123</span><span>GEOSA standards</span></div>
         </div>
@@ -688,6 +696,13 @@ function renderL(){lEl.innerHTML=P.filter(p=>active==="all"||p.g===active).map(p
 <div class="body"><p>${esc(p.d)}</p><p class="res">${esc(p.r)}</p>${(p.live||p.code)?`<div class="links">${p.live?`<a href="${p.live}" target="_blank" rel="noopener">Open live map ↗</a>`:""}${p.code?`<a href="${p.code}" target="_blank" rel="noopener">Code on GitHub ↗</a>`:""}</div>`:""}</div></details>`).join("")}
 fEl.addEventListener("click",e=>{const b=e.target.closest("button[data-g]");if(!b)return;active=b.dataset.g;try{localStorage.setItem("pf-filter2",active)}catch(err){}renderF();renderL()});
 renderF();renderL();
+
+/* dashboard tabs */
+(function(){const img=document.getElementById("dashimg");if(!img)return;
+  document.querySelectorAll("[data-dash]").forEach(b=>b.addEventListener("click",()=>{
+    const k=b.dataset.dash;document.querySelectorAll("[data-dash]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    const go=()=>{img.src=img.getAttribute("data-src-"+k);const a=document.getElementById("dashlink");if(a)a.href=img.getAttribute("data-src-"+k);img.alt=img.getAttribute("data-alt-"+k);img.style.opacity=1};
+    if(reduce){go();return}img.style.opacity=0;setTimeout(go,200)}))})();
 
 /* copy email */
 document.getElementById("copy").addEventListener("click",ev=>{const b=ev.currentTarget,el=document.getElementById("email");
