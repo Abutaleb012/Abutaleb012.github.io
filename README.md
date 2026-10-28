@@ -1,6 +1,6 @@
 # Ali Abutaleb, PhD | Portfolio
 
-Personal portfolio of Ali Abutaleb, PhD, remote sensing scientist and GIS consultant based in Jazan, Saudi Arabia.
+Personal portfolio of Ali Abutaleb, PhD, remote sensing scientist and GIS consultant.
 
 Live site: https://abutaleb012.github.io/
 
